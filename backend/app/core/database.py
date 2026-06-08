@@ -6,9 +6,17 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import declarative_base, declared_attr
 
 # Convert postgresql:// to postgresql+asyncpg://
-async_database_url = settings.DATABASE_URL.replace(
-    "postgresql://", "postgresql+asyncpg://"
-)
+# For SQLite, keep it as is
+if settings.DATABASE_URL.startswith("postgresql://"):
+    async_database_url = settings.DATABASE_URL.replace(
+        "postgresql://", "postgresql+asyncpg://"
+    )
+elif settings.DATABASE_URL.startswith("sqlite://"):
+    async_database_url = settings.DATABASE_URL.replace(
+        "sqlite://", "sqlite+aiosqlite:///"
+    )
+else:
+    async_database_url = settings.DATABASE_URL
 
 engine = create_async_engine(
     async_database_url, echo=settings.DEBUG, pool_size=20, max_overflow=10

@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = (
-        "postgresql://lady_andal:Snowfall%23123@localhost:5433/lady_andal_erp"
+        "sqlite+aiosqlite:///./lady_andal.db"
     )
     DATABASE_STARTUP_REQUIRED: bool = False
 

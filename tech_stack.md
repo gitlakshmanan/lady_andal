@@ -1,3 +1,6 @@
+ RUN COMMAND
+ ..\venv_andal\Scripts\python.exe -m uvicorn app.main:app -
+
 Revised Tech Stack (Simpler)
 
 Frontend: Plain HTML/CSS/JavaScript + Bootstrap 5

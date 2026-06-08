@@ -65,12 +65,27 @@ async function login(username, password) {
     body: formData,
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || "Login failed");
+  const contentType = response.headers.get("content-type");
+  let data;
+
+  try {
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error("Non-JSON response from server:", text);
+      throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}`);
+    }
+  } catch (e) {
+    console.error("Failed to parse response:", e);
+    throw new Error("Server error: Invalid response format. Check backend logs.");
   }
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error(data.detail || "Login failed");
+  }
+
+  return data;
 }
 
 async function getCurrentUser() {

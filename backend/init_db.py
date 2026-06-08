@@ -13,9 +13,12 @@ sys.path.append(str(Path(__file__).parent))
 
 import logging
 
-from app.core.database import Base, engine
+from app.core.database import Base, engine, AsyncSessionLocal
 from app.core.security import get_password_hash
-from sqlalchemy import text
+from app.models.department import Department
+from app.models.location import Location
+from app.models.user import User
+from sqlalchemy import text, select
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,15 +39,8 @@ async def init_database():
             logger.info("Tables created successfully!")
 
         # Create default admin user
-        from app.core.database import AsyncSessionLocal
-        from app.models.department import Department
-        from app.models.location import Location
-        from app.models.user import User
-
         async with AsyncSessionLocal() as db:
             # Check if admin exists
-            from sqlalchemy import select
-
             result = await db.execute(select(User).where(User.username == "admin"))
             admin = result.scalar_one_or_none()
 

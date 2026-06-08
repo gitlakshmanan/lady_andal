@@ -28,6 +28,7 @@ function setupEventListeners() {
   document.getElementById("saveUserBtn")?.addEventListener("click", saveUser);
 
   // Role management
+  document.getElementById("saveRoleBtn")?.addEventListener("click", saveRole);
   document
     .getElementById("savePermissionsBtn")
     ?.addEventListener("click", savePermissions);
@@ -516,6 +517,116 @@ function displayCategories(categories) {
     `,
     )
     .join("");
+}
+
+// ============ Role Save Function ============
+async function saveRole() {
+  const roleName = document.getElementById("roleName").value;
+  const roleDescription = document.getElementById("roleDescription").value;
+
+  if (!roleName) {
+    showToast("Please enter role name", "error");
+    return;
+  }
+
+  try {
+    const roleData = {
+      name: roleName,
+      description: roleDescription,
+    };
+    await api.createRole(roleData);
+    showToast("Role created successfully!", "success");
+    bootstrap.Modal.getInstance(document.getElementById("roleModal")).hide();
+    document.getElementById("roleForm").reset();
+    loadRoles();
+  } catch (error) {
+    showToast(error.message || "Failed to save role", "error");
+  }
+}
+
+// ============ Location Save Function ============
+async function saveLocation() {
+  const locationCode = document.getElementById("locationCode").value;
+  const locationName = document.getElementById("locationName").value;
+
+  if (!locationCode || !locationName) {
+    showToast("Please fill all required fields", "error");
+    return;
+  }
+
+  try {
+    const locationData = {
+      code: locationCode,
+      name: locationName,
+      type: document.getElementById("locationType").value,
+      address: document.getElementById("locationAddress").value,
+      city: document.getElementById("locationCity").value,
+      state: document.getElementById("locationState").value,
+      is_active: document.getElementById("locationActive").checked,
+    };
+    await api.createLocation(locationData);
+    showToast("Location saved successfully!", "success");
+    bootstrap.Modal.getInstance(document.getElementById("locationModal")).hide();
+    document.getElementById("locationForm").reset();
+    loadLocations();
+  } catch (error) {
+    showToast(error.message || "Failed to save location", "error");
+  }
+}
+
+// ============ Department Save Function ============
+async function saveDepartment() {
+  const deptCode = document.getElementById("departmentCode").value;
+  const deptName = document.getElementById("departmentName").value;
+
+  if (!deptCode || !deptName) {
+    showToast("Please fill all required fields", "error");
+    return;
+  }
+
+  try {
+    const deptData = {
+      code: deptCode,
+      name: deptName,
+      description: document.getElementById("departmentDescription").value,
+      head_id: document.getElementById("departmentHead").value || null,
+      is_active: document.getElementById("departmentActive").checked,
+    };
+    await api.createDepartment(deptData);
+    showToast("Department saved successfully!", "success");
+    bootstrap.Modal.getInstance(document.getElementById("departmentModal")).hide();
+    document.getElementById("departmentForm").reset();
+    loadDepartments();
+  } catch (error) {
+    showToast(error.message || "Failed to save department", "error");
+  }
+}
+
+// ============ Category Save Function ============
+async function saveCategory() {
+  const categoryCode = document.getElementById("categoryCode").value;
+  const categoryName = document.getElementById("categoryName").value;
+
+  if (!categoryCode || !categoryName) {
+    showToast("Please fill all required fields", "error");
+    return;
+  }
+
+  try {
+    const categoryData = {
+      code: categoryCode,
+      name: categoryName,
+      description: document.getElementById("categoryDescription").value,
+      is_active: document.getElementById("categoryActive").checked,
+    };
+    await api.createCategory(categoryData);
+    showToast("Category saved successfully!", "success");
+    bootstrap.Modal.getInstance(document.getElementById("categoryModal")).hide();
+    document.getElementById("categoryForm").reset();
+    loadCategories();
+  } catch (error) {
+    showToast(error.message || "Failed to save category", "error");
+  }
 }
 
 // ============ System Settings ============
