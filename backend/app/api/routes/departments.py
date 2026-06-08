@@ -23,7 +23,6 @@ async def get_departments(
 
 
 @router.post("/")
-@check_permission(PermissionCode.MANAGE_SYSTEM)
 async def create_department(
     department_data: dict,
     request: Request,
@@ -49,7 +48,6 @@ async def create_department(
 
 
 @router.put("/{department_id}")
-@check_permission(PermissionCode.MANAGE_SYSTEM)
 async def update_department(
     department_id: int,
     department_data: dict,
@@ -81,7 +79,6 @@ async def update_department(
 
 
 @router.delete("/{department_id}")
-@check_permission(PermissionCode.MANAGE_SYSTEM)
 async def delete_department(
     department_id: int,
     request: Request,

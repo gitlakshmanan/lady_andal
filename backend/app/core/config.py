@@ -7,8 +7,9 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = (
-        "postgresql://lady_andal:Snowfall#123@localhost:5432/lady_andal_erp"
+        "postgresql://lady_andal:Snowfall%23123@localhost:5433/lady_andal_erp"
     )
+    DATABASE_STARTUP_REQUIRED: bool = False
 
     # Security
     SECRET_KEY: str = "55_pHenAYqUlfIIyIqt-yqtAFbb6Ur-mIKVjFLrZRzZfQ28dbfuLADOzwZUT5OAb"

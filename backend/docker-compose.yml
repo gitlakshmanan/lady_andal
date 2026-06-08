@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lady_andal_db
+    environment:
+      POSTGRES_USER: lady_andal
+      POSTGRES_PASSWORD: Snowfall#123
+      POSTGRES_DB: lady_andal_erp
+    ports:
+      - "5433:5432"
+    volumes:
+      - lady_andal_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lady_andal -d lady_andal_erp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  lady_andal_postgres_data:

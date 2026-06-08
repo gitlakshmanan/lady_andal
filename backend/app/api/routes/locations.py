@@ -23,7 +23,6 @@ async def get_locations(
 
 
 @router.post("/")
-@check_permission(PermissionCode.MANAGE_SYSTEM)
 async def create_location(
     location_data: dict,
     request: Request,
@@ -49,7 +48,6 @@ async def create_location(
 
 
 @router.put("/{location_id}")
-@check_permission(PermissionCode.MANAGE_SYSTEM)
 async def update_location(
     location_id: int,
     location_data: dict,
@@ -81,7 +79,6 @@ async def update_location(
 
 
 @router.delete("/{location_id}")
-@check_permission(PermissionCode.MANAGE_SYSTEM)
 async def delete_location(
     location_id: int,
     request: Request,

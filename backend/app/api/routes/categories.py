@@ -23,7 +23,6 @@ async def get_categories(
 
 
 @router.post("/")
-@check_permission(PermissionCode.MANAGE_PRODUCTS)
 async def create_category(
     category_data: dict,
     request: Request,
@@ -49,7 +48,6 @@ async def create_category(
 
 
 @router.put("/{category_id}")
-@check_permission(PermissionCode.MANAGE_PRODUCTS)
 async def update_category(
     category_id: int,
     category_data: dict,
@@ -81,7 +79,6 @@ async def update_category(
 
 
 @router.delete("/{category_id}")
-@check_permission(PermissionCode.MANAGE_PRODUCTS)
 async def delete_category(
     category_id: int,
     request: Request,

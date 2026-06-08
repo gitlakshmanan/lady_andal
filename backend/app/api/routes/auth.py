@@ -6,6 +6,7 @@ from sqlalchemy import select, update
 from datetime import datetime
 from app.core.database import get_db
 from app.core.security import verify_password, create_access_token, create_refresh_token, decode_token, get_password_hash
+from app.api.dependencies import get_current_user
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, Token, TokenRefresh
 from app.services.audit_service import log_audit
@@ -71,8 +72,8 @@ async def register(
 
 @router.post("/login", response_model=Token)
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
     request: Request,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db)
 ):
     # Find user by username or email

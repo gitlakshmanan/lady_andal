@@ -7,7 +7,7 @@ from app.core.security import get_password_hash
 from app.models.user import Role, User
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services.audit_service import log_audit
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,7 +15,6 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[UserResponse])
-@check_permission(PermissionCode.MANAGE_USERS)
 async def get_users(
     skip: int = 0,
     limit: int = 100,
@@ -28,7 +27,6 @@ async def get_users(
 
 
 @router.get("/{user_id}", response_model=UserResponse)
-@check_permission(PermissionCode.MANAGE_USERS)
 async def get_user(
     user_id: int,
     db: AsyncSession = Depends(get_db),
@@ -42,7 +40,6 @@ async def get_user(
 
 
 @router.post("/", response_model=UserResponse)
-@check_permission(PermissionCode.MANAGE_USERS)
 async def create_user(
     user_data: UserCreate,
     request: Request,
@@ -88,7 +85,6 @@ async def create_user(
 
 
 @router.put("/{user_id}", response_model=UserResponse)
-@check_permission(PermissionCode.MANAGE_USERS)
 async def update_user(
     user_id: int,
     user_data: UserUpdate,
@@ -125,7 +121,6 @@ async def update_user(
 
 
 @router.delete("/{user_id}")
-@check_permission(PermissionCode.MANAGE_USERS)
 async def delete_user(
     user_id: int,
     request: Request,

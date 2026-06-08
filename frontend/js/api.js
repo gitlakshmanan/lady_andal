@@ -1,5 +1,8 @@
 // API Configuration
-const API_BASE_URL = "http://localhost:8000/api/v1";
+const API_BASE_URL =
+  window.location.protocol === "file:"
+    ? "http://127.0.0.1:8000/api/v1"
+    : `${window.location.origin}/api/v1`;
 
 // Generic API call function
 async function apiCall(endpoint, options = {}) {
@@ -426,13 +429,46 @@ async function clearCache() {
 
 // Add these to your window.api export
 window.api = {
-  // ... existing exports ...
+  // Auth
+  login,
+  getCurrentUser,
+  logout,
 
   // Auth
   register,
   forgotPassword,
   resetPassword,
   refreshToken,
+
+  // Inventory
+  getCurrentStock,
+  getStockLedger,
+  getProducts,
+  createProduct,
+  createStockEntry,
+  getCategories,
+
+  // Demands
+  createDemand,
+  getDemands,
+  getDemandById,
+  submitDemand,
+  approveDemand,
+  rejectDemand,
+  getPendingApprovals,
+
+  // Transfers
+  createTransfer,
+  getTransfers,
+  approveTransfer,
+
+  // Reports
+  getStockReport,
+  getDemandReport,
+  getAuditReport,
+
+  // Dashboard
+  getDashboardStats,
 
   // Users
   getUsers,

@@ -1,7 +1,12 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Depends
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from contextlib import asynccontextmanager
+from sqlalchemy.exc import SQLAlchemyError
 from app.core.database import engine, Base
 from app.core.config import settings
 from app.api.routes import (
@@ -13,15 +18,24 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
+LOGO_PATH = PROJECT_ROOT / "lady_andal.png"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting up Lady Andal ERP API...")
-    async with engine.begin() as conn:
-        # Create tables (use migrations in production)
-        await conn.run_sync(Base.metadata.create_all)
-        logger.info("Database tables created/verified")
+    try:
+        async with engine.begin() as conn:
+            # Create tables (use migrations in production)
+            await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created/verified")
+    except (OSError, SQLAlchemyError) as exc:
+        logger.error("Database startup check failed: %s", exc)
+        if settings.DATABASE_STARTUP_REQUIRED:
+            raise
+        logger.warning("Continuing without database because DATABASE_STARTUP_REQUIRED=False")
     yield
     # Shutdown
     logger.info("Shutting down...")
@@ -66,16 +80,21 @@ app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboar
 
 @app.get("/")
 async def root():
-    return {
-        "message": "Lady Andal ERP API",
-        "version": "1.0.0",
-        "status": "operational",
-        "docs": "/docs"
-    }
+    return FileResponse(FRONTEND_DIR / "login.html")
 
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "lady-andal-erp"}
+
+@app.get("/lady_andal.png")
+async def logo():
+    return FileResponse(LOGO_PATH, media_type="image/png")
+
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse(LOGO_PATH, media_type="image/png")
+
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn

@@ -28,12 +28,12 @@ async def init_database():
         async with engine.begin() as conn:
             # Test if we can connect
             await conn.execute(text("SELECT 1"))
-            logger.info("✅ Database connection successful!")
+            logger.info("Database connection successful!")
 
             # Create all tables
             logger.info("Creating tables...")
             await conn.run_sync(Base.metadata.create_all)
-            logger.info("✅ Tables created successfully!")
+            logger.info("Tables created successfully!")
 
         # Create default admin user
         from app.core.database import AsyncSessionLocal
@@ -63,7 +63,7 @@ async def init_database():
                     )
                     db.add(location)
                     await db.flush()
-                    logger.info("✅ Default location created")
+                    logger.info("Default location created")
 
                 # Create default department
                 result = await db.execute(select(Department).limit(1))
@@ -77,7 +77,7 @@ async def init_database():
                     )
                     db.add(department)
                     await db.flush()
-                    logger.info("✅ Default department created")
+                    logger.info("Default department created")
 
                 # Create admin user
                 admin = User(
@@ -92,18 +92,18 @@ async def init_database():
                 )
                 db.add(admin)
                 await db.commit()
-                logger.info("✅ Admin user created successfully!")
+                logger.info("Admin user created successfully!")
                 logger.info("   Username: admin")
                 logger.info("   Password: admin123")
             else:
-                logger.info("✅ Admin user already exists")
+                logger.info("Admin user already exists")
 
-        logger.info("\n🎉 Database initialization completed successfully!")
+        logger.info("\nDatabase initialization completed successfully!")
         logger.info("\nYou can now run the backend:")
         logger.info("  uvicorn app.main:app --reload")
 
     except Exception as e:
-        logger.error(f"❌ Database initialization failed: {e}")
+        logger.error(f"Database initialization failed: {e}")
         raise
 
 

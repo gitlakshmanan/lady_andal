@@ -12,7 +12,7 @@ async def test_connection():
         async with engine.connect() as conn:
             result = await conn.execute(text("SELECT version();"))
             version = result.scalar()
-            print(f"✅ Connected successfully!")
+            print("Connected successfully!")
             print(f"PostgreSQL Version: {version}")
 
             # Check if lady_andal database is accessible
@@ -22,7 +22,7 @@ async def test_connection():
 
         return True
     except Exception as e:
-        print(f"❌ Connection failed: {e}")
+        print(f"Connection failed: {e}")
         return False
 
 

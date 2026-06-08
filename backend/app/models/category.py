@@ -13,5 +13,7 @@ class Category(Base):
     is_active = Column(Boolean, default=True)
 
     # Relationships
-    parent = relationship("Category", remote_side=[id], backref="children")
     products = relationship("Product", back_populates="category")
+
+
+Category.parent = relationship(Category, remote_side=[Category.id], backref="children")
